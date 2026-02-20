@@ -1,0 +1,97 @@
+using flecs.script.*
+using flecs.components.*
+using flecs.game
+
+// "Terraced canyon & lava vein" — stepped mesas + deep cut + glowing lava river
+
+const Resolution: 150
+const Scale: 44 / Resolution
+const Size: 58
+const Height: 8
+const CellW: Size / Resolution
+
+// canyon direction + width controls
+const CanyonAngle: 0.55   // radians-ish feel (just used as a mix axis)
+const CanyonWidth: 0.10
+const CanyonDepth: 0.75
+
+// terrace controls
+const TerraceSteps: 11
+const TerraceSharpness: 0.85
+
+for x in 0..Resolution {
+  for y in 0..Resolution {
+    const xN = x * Scale
+    const yN = y * Scale
+
+    // normalized coords (0..1)
+    const u = x / Resolution
+    const v = y / Resolution
+
+    // rotate-ish axis for canyon: blend u/v into an oblique coordinate
+    const s = u * cos(CanyonAngle) + v * sin(CanyonAngle)
+
+    // base terrain: broad + mid + small noise
+    const nB = perlin2(xN / 7, yN / 7)
+    const nM = perlin2(xN / 3, yN / 3)
+    const nS = perlin2(xN, yN)
+
+    // mesa height before terracing
+    const mesa =
+      0.55 * abs(nB) +
+      0.22 * abs(nM) +
+      0.10 * abs(nS)
+
+    // terracing: quantize height into steps, then smooth a bit
+    const t = clamp(mesa, 0, 1)
+    const stepped = floor(t * TerraceSteps) / TerraceSteps
+    const terrace = lerp(t, stepped, TerraceSharpness)
+
+    // carve canyon along s axis with a meandering offset
+    const meander = 0.06 * perlin2(xN / 4 + 8.2, yN / 4 - 3.1)
+    const center = 0.50 + meander
+    const dist = abs(s - center)
+
+    const cut = 1 - smoothstep(CanyonWidth, CanyonWidth * 3.5, dist)
+    const canyon = -CanyonDepth * cut * (0.7 + 0.3 * abs(perlin2(xN * 1.2, yN * 1.2)))
+
+    // lava: thin core inside canyon, with pulsating emissive ripples
+    const lavaCore = smoothstep(CanyonWidth * 0.55, 0.0, dist)
+    const lavaNoise = 0.45 + 0.55 * abs(perlin2(xN * 2.6 + 1.7, yN * 2.6 - 0.9))
+    const lava = clamp(lavaCore * lavaNoise, 0, 1)
+
+    // final height
+    const h = terrace + canyon
+    const hN = clamp(h, -0.10, 1)
+
+    // color: sandstone mesas, darker canyon walls, hot lava
+    const wall = clamp(cut * 0.8, 0, 1)
+
+    const sandstone = clamp(0.40 + 0.45 * terrace + 0.10 * nB, 0, 1)
+    const darken = clamp(1 - 0.65 * wall, 0.2, 1)
+
+    const c1 = sandstone * darken + 0.20 * lava
+    const c2 = 0.15 * terrace + 0.85 * lava + 0.25 * wall
+
+    {
+      Position3: {x * CellW, hN * Height, y * CellW}
+      Box: {CellW, 10, CellW}
+      Rgb: {clamp(c1, 0, 1), clamp(c2, 0, 1)}
+      Emissive: {0.05 + 2.2 * lava}
+      Specular: {clamp(0.28 - 0.18 * lava, 0, 0.3), 2}
+    }
+  }
+}
+
+ground_plane {
+  Rgb: {}
+}
+
+$ {
+  TimeOfDay: {0.78}   // dusk so lava glow pops but terrain still reads
+}
+
+camera {
+  Position3: {64, 30, 71}
+  Rotation3: {-0.5, 3.85, 0}
+}

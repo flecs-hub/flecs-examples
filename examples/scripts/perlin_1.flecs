@@ -1,0 +1,50 @@
+using flecs.script.*
+using flecs.components.*
+
+const xMax = 250
+const yMax = 500
+
+const xCenter = xMax / 2
+const yCenter = yMax / 2 
+
+const sand = Rgb: {0.92, 0.86, 0.55}
+const grass = Rgb: {0.18, 0.4, 0.22}
+const rock = Rgb: {0.5, 0.4, 0.4}
+const snow = Rgb: {0.95, 0.95, 0.95}
+
+const shoreH = 0.03
+const valleyH = 0.2
+const rockH = 0.4
+const snowH = 0.6
+
+for x in 0..xMax {
+  for y in 0..yMax {
+    const n3 = perlin2(x / 61, y / 41) + 0.2
+    const n2 = perlin2(x / 17, y / 17)
+    const n1 = perlin2(x / 5, y / 5)
+    const h = (n3 * 16 + n2 * 3 + n1 * 1) / 20
+
+    if h > -1.5 {
+      const tSandToGrass = smoothstep(shoreH - 0.04, shoreH + 0.04, h)
+      const tGrassToRock = smoothstep(valleyH, rockH, h)
+      const tRockToSnow  = smoothstep(snowH - 0.06, snowH + 0.04, h)
+      const tint = (n2 * 0.2) + (n1 * 0.1)
+      
+      const c0 = lerp(sand, grass, tSandToGrass)
+      const c1 = lerp(c0, rock, tGrassToRock)
+      const c2 = lerp(c1, snow, tRockToSnow)
+      const c3 = Rgb: {$c2.r + tint, $c2.g + tint, $c2.b + tint}
+      const color = clamp(c3, 0, 1)
+
+      {
+        Position3: {x - xCenter, h * 30, y - yCenter}
+        Box: {1, 3, 1}
+        $color
+      }
+    }
+  }
+}
+
+ground_plane {
+  Rgb: {0.1, 0.7, 1}
+}
