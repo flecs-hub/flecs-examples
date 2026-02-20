@@ -1,0 +1,32 @@
+[
+  {
+    "sectionId": "c",
+    "sectionTitle": "C examples",
+    "id": "city",
+    "title": "City",
+    "url": "https://flecs-hub.github.io/city/etc/",
+    "captureCanvas": false,
+    "screenshot": "/Users/sandermertens/GitHub/SanderMertens/flecs-projects/flecs-examples/examples/screenshots/city.png",
+    "ok": true
+  },
+  {
+    "sectionId": "cpp",
+    "sectionTitle": "C++ examples",
+    "id": "tower_defense",
+    "title": "Tower Defense",
+    "url": "https://www.flecs.dev/tower_defense/etc/",
+    "captureCanvas": false,
+    "screenshot": "/Users/sandermertens/GitHub/SanderMertens/flecs-projects/flecs-examples/examples/screenshots/tower_defense.png",
+    "ok": true
+  },
+  {
+    "sectionId": "cpp",
+    "sectionTitle": "C++ examples",
+    "id": "traffic",
+    "title": "Traffic",
+    "url": "https://flecs-hub.github.io/traffic/etc/",
+    "captureCanvas": false,
+    "screenshot": "/Users/sandermertens/GitHub/SanderMertens/flecs-projects/flecs-examples/examples/screenshots/traffic.png",
+    "ok": true
+  }
+]

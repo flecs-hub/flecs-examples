@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540" role="img" aria-labelledby="title desc">
+  <title id="title">Network placeholder</title>
+  <desc id="desc">Placeholder screenshot for the Networked Demo example.</desc>
+  <rect width="960" height="540" fill="#0a0c0e"/>
+  <rect x="40" y="40" width="880" height="460" fill="#16171c" stroke="#4d515a" stroke-width="4"/>
+  <g stroke="#4d515a" stroke-width="4">
+    <line x1="210" y1="185" x2="390" y2="128"/>
+    <line x1="390" y1="128" x2="565" y2="210"/>
+    <line x1="565" y1="210" x2="760" y2="165"/>
+    <line x1="210" y1="185" x2="350" y2="330"/>
+    <line x1="350" y1="330" x2="560" y2="340"/>
+    <line x1="560" y1="340" x2="760" y2="165"/>
+    <line x1="390" y1="128" x2="560" y2="340"/>
+  </g>
+  <circle cx="210" cy="185" r="26" fill="#A2D8B4"/>
+  <circle cx="390" cy="128" r="26" fill="rgb(73, 129, 181)"/>
+  <circle cx="565" cy="210" r="26" fill="#A2D8B4"/>
+  <circle cx="760" cy="165" r="26" fill="rgb(73, 129, 181)"/>
+  <circle cx="350" cy="330" r="26" fill="rgb(73, 129, 181)"/>
+  <circle cx="560" cy="340" r="26" fill="#A2D8B4"/>
+  <text x="56" y="96" fill="#dde0e6" font-size="34" font-family="Inter, Helvetica, Arial, sans-serif">Networked Demo</text>
+</svg>
