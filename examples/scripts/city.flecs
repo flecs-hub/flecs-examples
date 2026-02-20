@@ -1,8 +1,3 @@
-// Script that creates a city
-//
-// For C/C++ examples and docs go to:
-//  https://github.com/SanderMertens/flecs
-
 using flecs.script.*
 using flecs.components.*
 

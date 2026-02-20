@@ -153,10 +153,12 @@ onBeforeUnmount(() => {
   --light-green: #a2d8b4;
   --blue: rgb(73, 129, 181);
 
-  --bg-color: hsl(214, 10%, 13%);
+  --bg-color: rgb(25, 28, 31);
   --bg-content: rgb(36, 41, 46);
+  --bg-content-alt: hsl(210, 12%, 14%);
   --bg-content-hover: hsl(210, 12%, 20%);
-  --border: rgba(255, 255, 255, 0.07);
+  --border: hsl(210, 12%, 20%);
+  --border-hover: rgba(255, 255, 255, 0.2);
 
   --primary-text: hsl(195, 15%, 85%);
   --secondary-text: hsl(198, 9%, 56%);
@@ -175,7 +177,7 @@ onBeforeUnmount(() => {
 body {
   margin: 0;
   font-family: Inter, Helvetica, Arial, sans-serif;
-  background: var(--bg-content);
+  background: var(--bg-color);
   color: var(--primary-text);
 }
 
@@ -191,7 +193,7 @@ body {
   height: 100vh;
   padding: 1.25rem 1rem;
   border-right: 1px solid var(--border);
-  background: var(--bg-color);
+  background: var(--bg-content);
   overflow-y: auto;
 }
 

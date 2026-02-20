@@ -164,6 +164,7 @@ watch(
   align-items: center;
   gap: 0.55rem;
   font-size: 1.15rem;
+  font-weight: 600;
   color: var(--steel-300);
   cursor: pointer;
   user-select: none;

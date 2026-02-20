@@ -34,7 +34,7 @@
     "sectionTitle": "Script examples",
     "id": "procedural_city",
     "title": "Procedural City",
-    "url": "https://flecs.dev/explorer/?sidebar=false&code_url=https://raw.githubusercontent.com/flecs-hub/flecs-examples/refs/heads/main/examples/scripts/city.flecs?token=GHSAT0AAAAAAC2RGZF4IZYBJQWTOXMBRX5W2MXZVZQ",
+    "url": "https://flecs.dev/explorer/?sidebar=false&code_url=https://raw.githubusercontent.com/flecs-hub/flecs-examples/refs/heads/main/examples/scripts/city.flecs",
     "captureCanvas": true,
     "screenshot": "/Users/sandermertens/GitHub/SanderMertens/flecs-projects/flecs-examples/examples/screenshots/procedural_city.png",
     "ok": true
@@ -42,9 +42,19 @@
   {
     "sectionId": "script",
     "sectionTitle": "Script examples",
+    "id": "procedural_building",
+    "title": "Procedural Buildings",
+    "url": "https://flecs.dev/explorer/?sidebar=false&code_url=https://raw.githubusercontent.com/flecs-hub/flecs-examples/refs/heads/main/examples/scripts/buildings.flecs",
+    "captureCanvas": true,
+    "screenshot": "/Users/sandermertens/GitHub/SanderMertens/flecs-projects/flecs-examples/examples/screenshots/procedural_building.png",
+    "ok": true
+  },
+  {
+    "sectionId": "script",
+    "sectionTitle": "Script examples",
     "id": "perlin_1",
     "title": "Perlin Noise 1",
-    "url": "https://flecs.dev/explorer/?sidebar=false&code_url=https://raw.githubusercontent.com/flecs-hub/flecs-examples/refs/heads/main/examples/scripts/perlin_1.flecs?token=GHSAT0AAAAAAC2RGZF4V46QZXEGJDZCONDQ2MXZWSA",
+    "url": "https://flecs.dev/explorer/?sidebar=false&code_url=https://raw.githubusercontent.com/flecs-hub/flecs-examples/refs/heads/main/examples/scripts/perlin_1.flecs",
     "captureCanvas": true,
     "screenshot": "/Users/sandermertens/GitHub/SanderMertens/flecs-projects/flecs-examples/examples/screenshots/perlin_1.png",
     "ok": true
@@ -54,7 +64,7 @@
     "sectionTitle": "Script examples",
     "id": "perlin_2",
     "title": "Perlin Noise 2",
-    "url": "https://flecs.dev/explorer/?sidebar=false&code_url=https://raw.githubusercontent.com/flecs-hub/flecs-examples/refs/heads/main/examples/scripts/perlin_2.flecs?token=GHSAT0AAAAAAC2RGZF5PPD63M5ABERRU6EK2MXZXCA",
+    "url": "https://flecs.dev/explorer/?sidebar=false&code_url=https://raw.githubusercontent.com/flecs-hub/flecs-examples/refs/heads/main/examples/scripts/perlin_2.flecs",
     "captureCanvas": true,
     "screenshot": "/Users/sandermertens/GitHub/SanderMertens/flecs-projects/flecs-examples/examples/screenshots/perlin_2.png",
     "ok": true
