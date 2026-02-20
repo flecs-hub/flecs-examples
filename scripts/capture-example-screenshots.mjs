@@ -5,7 +5,7 @@ import path from "node:path";
 import vm from "node:vm";
 import process from "node:process";
 
-const DEFAULT_EXAMPLES_PATH = "examples.js";
+const DEFAULT_EXAMPLES_PATH = "js/examples.js";
 const DEFAULT_OUTPUT_DIR = "examples/screenshots";
 const DEFAULT_EXPLORER_URL = "https://www.flecs.dev/explorer/";
 const DEFAULT_BROWSER_CHANNEL = "chromium";
@@ -145,7 +145,7 @@ function collectTargets(data, options) {
         id: item.id || item.title || "example",
         title: item.title || item.id || "Example",
         url,
-        captureCanvas: item["capture-canvas"] === true || item.captureCanvas === true
+        captureCanvas: item["capture_canvas"] === true || item.captureCanvas === true
       });
     });
   });
@@ -258,7 +258,7 @@ async function main() {
       if (target.captureCanvas) {
         const canvas = await findCanvasForScreenshot(page);
         if (!canvas) {
-          throw new Error("capture-canvas is enabled, but no visible canvas element was found");
+          throw new Error("capture_canvas is enabled, but no visible canvas element was found");
         }
 
         try {

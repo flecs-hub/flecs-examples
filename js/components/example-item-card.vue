@@ -41,11 +41,11 @@ defineProps({
   display: block;
   width: var(--card-total-width);
   margin: 0;
-  padding: 0.75rem;
+  padding: 0 0 0.75rem;
+  overflow: hidden;
   background: var(--bg-content);
   border: 1px solid var(--border);
-  border-radius: 8px;
-  color: var(--light-green);
+  border-radius: 4px;
   text-decoration: none;
   transition: background-color 0.12s ease, box-shadow 0.12s ease;
 }
@@ -56,18 +56,22 @@ defineProps({
 
 .example-card img {
   display: block;
-  width: var(--card-width);
+  width: 100%;
   height: var(--card-height);
   object-fit: cover;
-  border-radius: 6px;
+  transform: scale(1.08);
+  transform-origin: center;
   background: var(--steel-800);
 }
 
 .example-card h3 {
-  margin: 0.75rem 0 0;
+  margin: 1rem 0 0;
+  padding: 0 0.75rem;
   font-size: 1rem;
   line-height: 1.35;
+  color: var(--primary-text);
   font-weight: 600;
+  transition: color 0.12s ease;
 }
 
 .example-card:hover {
@@ -78,7 +82,7 @@ defineProps({
 .example-card:hover h3,
 .example-card:focus-visible h3 {
   color: var(--green);
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 .example-card:focus-visible {

@@ -20,15 +20,23 @@
       title: "Script examples",
       items: [
         {
-          id: "script_space_scene",
-          title: "Space Scene",
-          url: "scripts/examples/space_scene.flecs"
+          id: "procedural_city",
+          title: "Procedural City",
+          url: "https://flecs.dev/explorer/?sidebar=false&code_url=https://raw.githubusercontent.com/flecs-hub/flecs-examples/refs/heads/main/examples/scripts/city.flecs?token=GHSAT0AAAAAAC2RGZF4IZYBJQWTOXMBRX5W2MXZVZQ",
+          capture_canvas: true
         },
         {
-          id: "script_factory_line",
-          title: "Factory Line",
-          url: "scripts/examples/factory_line.flecs"
+          id: "perlin_1",
+          title: "Perlin Noise 1",
+          url: "https://flecs.dev/explorer/?sidebar=false&code_url=https://raw.githubusercontent.com/flecs-hub/flecs-examples/refs/heads/main/examples/scripts/perlin_1.flecs?token=GHSAT0AAAAAAC2RGZF4V46QZXEGJDZCONDQ2MXZWSA",
+          capture_canvas: true
         },
+        {
+          id: "perlin_2",
+          title: "Perlin Noise 2",
+          url: "https://flecs.dev/explorer/?sidebar=false&code_url=https://raw.githubusercontent.com/flecs-hub/flecs-examples/refs/heads/main/examples/scripts/perlin_2.flecs?token=GHSAT0AAAAAAC2RGZF5PPD63M5ABERRU6EK2MXZXCA",
+          capture_canvas: true
+        }
       ]
     },
     {

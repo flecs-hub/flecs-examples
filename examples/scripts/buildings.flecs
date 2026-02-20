@@ -1,0 +1,1135 @@
+using flecs.script
+using flecs.components.*
+using flecs.game
+
+const Stone = Rgb: {0.4, 0.3, 0.3}
+const SideWalk = Rgb: {0.4, 0.4, 0.4}
+const Concrete = Rgb: {0.3, 0.3, 0.3}
+const Door = Rgb: {0.1, 0.07, 0.04}
+const Frame = Rgb: {0.7, 0.7, 0.7}
+const Awning = Rgb: {0.06, 0.08, 0.05}
+const Railing = Rgb: {0.9, 0.8, 0.7}
+const Roof = Rgb: {0.1, 0.1, 0.1}
+const Interior = Rgb: {0.8, 0.8, 0.8}
+const Floor = Rgb: {0.1, 0.05, 0.01}
+const Street = Rgb: {0.05, 0.05, 0.05}
+const Plant = Rgb: {0.15, 0.4, 0.1}
+const Lantern = Rgb: {0.3, 0.3, 0.3}
+const LanternLight = Rgb: {1, 0.5, 0}
+const MaxSize: 5
+const rng = math.Rng: {seed: 16}
+
+@tree Parent
+template Gap {
+  prop width = f32: 2
+  prop depth = f32: 2
+  prop height = f32: 0.15
+  prop color: $Stone
+
+  const w_inner: width
+  const d_inner: depth
+  const left: -width / 2
+  const right: width / 2
+  const top: depth / 2
+  const bottom: -depth / 2
+  const y: height / 2
+  
+  Rotation3: {x += math.PI / 2}
+
+  with $color {{
+    Position3: {left, y}
+    Rotation3: {0, -math.PI / 2}
+    Rectangle: {d_inner, height}
+  } {
+    Position3: {right, y}
+    Rotation3: {0, math.PI / 2}
+    Rectangle: {d_inner, height}
+  } {
+    Position3: {0, y, top}
+    Rectangle: {w_inner, height}
+  } {
+    Position3: {0, y, bottom}
+    Rotation3: {0, math.PI}
+    Rectangle: {w_inner, height}
+  }}
+}
+
+@tree Parent
+template Frame {
+  prop width = f32: 2
+  prop depth = f32: 2
+  prop height = f32: 0.15
+  prop thickness = f32: 0.05
+  prop color = Rgb: {0.7, 0.7, 0.7}
+
+  const w_inner: width - thickness * 2
+  const d_inner: depth - thickness * 2
+  const left: -width / 2
+  const right: width / 2
+  const top: depth / 2
+  const bottom: -depth / 2
+  const ceil_left: left + thickness / 2
+  const ceil_right: right - thickness / 2
+  const ceil_top: top - thickness / 2
+  const ceil_bottom: bottom + thickness / 2
+  const y: height / 2
+  
+  Rotation3: {x += math.PI / 2}
+
+  with $color {
+    // Left wall
+    {
+      Position3: {left, y}
+      Rotation3: {0, math.PI / 2}
+      Rectangle: {depth, height}
+    } {
+      Position3: {left + thickness, y}
+      Rotation3: {0, -math.PI / 2}
+      Rectangle: {d_inner, height}
+    }
+
+    // Right wall
+    {
+      Position3: {right, y}
+      Rotation3: {0, -math.PI / 2}
+      Rectangle: {depth, height}
+    } {
+      Position3: {right - thickness, y}
+      Rotation3: {0, math.PI / 2}
+      Rectangle: {d_inner, height}
+    }
+
+    // Top wall
+    {
+      Position3: {0, y, top}
+      Rotation3: {0, math.PI}
+      Rectangle: {width, height}
+    } {
+      Position3: {0, y, top - thickness}
+      Rectangle: {w_inner, height}
+    }
+
+    // Bottom wall
+    {
+      Position3: {0, y, bottom}
+      Rectangle: {width, height}
+    } {
+      Position3: {0, y, bottom + thickness}
+      Rotation3: {0, math.PI}
+      Rectangle: {w_inner, height}
+    }
+
+    // Ceiling
+    with Rotation3(math.PI / 2) {
+      {
+        Position3: {ceil_left, height}
+        Rectangle: {thickness, depth}
+      } {
+        Position3: {ceil_right, height}
+        Rectangle: {thickness, depth}
+      } {
+        Position3: {0, height, ceil_top}
+        Rectangle: {width, thickness}
+      } {
+        Position3: {0, height, ceil_bottom}
+        Rectangle: {width, thickness}
+      }
+    }
+
+    // Floor
+    with Rotation3(-math.PI / 2) {
+      {
+        Position3: {ceil_left, 0}
+        Rectangle: {thickness, depth}
+      } {
+        Position3: {ceil_right, 0}
+        Rectangle: {thickness, depth}
+      } {
+        Position3: {0, 0, ceil_top}
+        Rectangle: {width, thickness}
+      } {
+        Position3: {0, 0, ceil_bottom}
+        Rectangle: {width, thickness}
+      }
+    }
+  }
+}
+
+@tree Parent
+template Awning {
+  prop height = f32: 1
+  prop width = f32: 1
+  prop color: $Awning
+  
+  Position3: {z: 0.08}
+
+  const sqh: (height / 4) / math.sqrt(2)
+  const h:  height / 2 - (2 * height / 8) - sqh / 2
+
+  if rng.u(2) {
+    with $color {{
+      Position3: {y: height / 2 - height / 8}
+      Box: {width, height / 4, 0.02}
+    } {
+      Position3: {y: h, z: -sqh / 2}
+      Box: {width, height / 4, 0.02}
+      Rotation3: {x: math.PI/4}
+    }}
+  
+    {
+      Position3: {-width/2 + 0.01, h - sqh/2, -sqh / 2}
+      Rgb: {}
+      Box: {0.02, 0.02, sqh}
+    }
+    {
+      Position3: {width/2 - 0.01, h - sqh/2, -sqh / 2}
+      Rgb: {}
+      Box: {0.02, 0.02, sqh}
+    }
+  } else {
+    {
+      Position3: {y: height / 2 - height / 8}
+      Box: {width, height / 4, 0.02}
+      $color
+    }
+  }
+}
+
+@tree Parent
+template Window {
+  prop height = f32: 1
+  prop width = f32: 1
+  prop depth = f32: 0.12
+  prop awning: false
+  prop ledge: true
+  prop style: true
+  prop color: $Frame
+  prop awning_color: $Awning
+
+  Gap(
+    width: width
+    depth: height
+    height: depth
+  )
+
+  {
+    Position3: {z: depth}
+    Frame: {
+      width: width
+      depth: height
+      height: 0.05
+      color: $color
+    }
+  } 
+  {
+    Position3: {z: depth + 0.025}
+    Box: {width, 0.05, 0.05}
+    $color
+  }
+  if style {{
+    Position3: {z: depth + 0.025}
+    Box: {0.025, height, 0.025}
+    $color
+  }}
+
+  if awning {{
+    Position3: {}
+    Awning: {$, $, color: awning_color}
+  }}
+  
+  if ledge {{
+    Position3: {y: -height / 2 - 0.04, z: -0.05 + 0.1}
+    Box: {width, 0.2, 0.1}
+    $Concrete
+  }}
+}
+
+@tree Parent
+template Door {
+  prop height = f32: 1
+  prop width = f32: 1
+  prop depth = f32: 0.05
+  
+  {
+    Gap: {
+      width: width
+      depth: height
+      height: depth
+    }
+  }
+  
+  {
+    Position3: {y: 0.0, z: depth}
+    Frame: {
+      width: width
+      depth: height
+      height: 0.07
+      thickness: 0.07
+      color: {0,0,0}
+    }
+  } {
+    Position3: {z: depth + 0.025}
+    Box: {width, 0.05, 0.05}
+    Rgb: {0,0,0}
+  }
+}
+
+@tree Parent
+template Side {
+  prop color: $Stone
+  {
+    $color
+    Position3: {x += 0, y += 1}
+    Rectangle: {2, 2}
+  }
+  {
+    $Interior
+    Position3: {x += 0, y += 1}
+    Rectangle: {2, 2}
+    Rotation3: {y: -math.PI}
+  }
+}
+
+@tree Parent
+template RectangleGap {
+  prop width: 2.0
+  prop height: 2.0
+  prop gap_w: 0.75
+  prop gap_h: 1.3
+  prop gap_offset: 0.3
+  prop color: $Stone
+
+  const side_w: (width - gap_w) / 2.0
+  const side_w_h: side_w / 2.0
+  const top_h: height - gap_h - gap_offset
+  const bottom_h: gap_offset
+
+  for i in 0..2 {
+    const c: match i {
+      0: $color
+      1: Interior
+    }
+    with $c {{
+      Rectangle: {side_w, height}
+      Position3: {width / 2.0 - side_w_h}
+      Rotation3: {y: math.PI * i}
+    } {
+      Rectangle: {side_w, height}
+      Position3: {-width / 2.0 + side_w_h}
+      Rotation3: {y: math.PI * i}
+    } {
+      Rectangle: {width, top_h}
+      Position3: {0, height / 2.0 - top_h / 2}
+      Rotation3: {y: math.PI * i}
+    } {
+      Rectangle: {width, bottom_h}
+      Position3: {0, -height / 2.0 + bottom_h / 2}
+      Rotation3: {y: math.PI * i}
+    }}
+  }
+}
+
+@tree Parent
+template SideGap {
+  prop gap_w: 0.0
+  prop gap_h: 0.0
+  prop gap_offset: 0.0
+  prop color: $Stone
+  
+  RectangleGap: {
+    width: 2,
+    height: 2
+    gap_w: $
+    gap_h: $
+    gap_offset: $
+    color: $
+  }
+}
+
+@tree Parent
+template SideDoor {
+  prop width: 0.75
+  prop height: 1.25
+  prop color: $Stone
+  const offset: 0.05
+
+  Position3: {y += 1}
+  
+  SideGap(width, height, offset, color) {}
+
+  Door(width: width, height: height) {
+    Position3: {y: offset - 1 + height / 2}
+  }
+}
+
+@tree Parent
+template SideMixed {
+  prop color: $Stone
+  const depth: 0.2
+  const gap: 1.7
+  
+  Position3: {y += 1}
+  
+  SideGap(
+    gap_w: gap
+    gap_h: gap
+    gap_offset: 0.05
+    color: {0.6, 0.6, 0.6}
+  )
+  {
+    Box: {2, 0.2, 0.1}
+    Position3: {y: 1, z: -0.05}
+    Rgb: {0.6, 0.6, 0.6}
+  }
+  {
+    Position3: {y: -0.1}
+    Gap: {
+      width: gap
+      height: depth
+      depth: gap
+      color: {0.6, 0.6, 0.6}
+    }
+  }
+  {
+    RectangleGap: {
+      width: 1.7 
+      height: 1.75
+      gap_w: 0.6
+      gap_h: 1.1
+      gap_offset: 0
+      color: $color
+    }
+    Position3: {y: -0.1, z: 0.1}
+  }
+  {
+    Position3: {y:-0.47, y: -0.4, z: 0.1}
+    Door: {width: 0.6, height: 1.1, depth: 0.05}
+  }
+}
+
+@tree Parent
+template SideWindow {
+  prop width: 0.0
+  prop height: 0.0
+  prop offset: 0.0
+  prop awning: false
+  prop ledge: true
+  prop style: true
+  prop color: $Stone
+  prop window_color: $Frame
+  prop awning_color: $Awning
+
+  Position3: {y += 1}
+
+  SideGap(width, height, offset, color) {}
+
+  {
+    Position3: {y: -(2 - height) / 2 + offset}
+    Window: {
+      width: width
+      height: height
+      awning: awning
+      ledge: ledge
+      style: style
+      color: window_color
+      awning_color: $awning_color
+    }
+  }
+}
+
+@tree Parent
+template Roof {
+  prop width: 0.3
+
+  Position3: {y += 1}
+  
+  with $Railing {
+  if width {
+    {
+      Position3: {x: 0, y: -1, z: -width/2}
+      Rectangle: {2, width}
+      Rotation3: {x: -math.PI/2}
+    } {
+      Position3: {x: 0, y: -0.9, z: -width / 2 - 0.05}
+      Rectangle: {2, width - 0.1}
+      Rotation3: {x: math.PI/2}
+    } {
+      Position3: {x: 0, y: -0.95, z: -width}
+      Rectangle: {2, 0.1}
+    }
+  }
+
+  {
+    Position3: {x: 0, y: -0.85, z: -0.05}
+    Box: {2, 0.3, 0.1}
+  }}
+}
+
+@tree Parent
+template RoofCorner {
+  prop width: 0.3
+
+  Position3: {y += 1}
+  
+  with $Railing {
+    {
+      Position3: {x: -0.05, y: -0.85, z: -0.05}
+      Box: {0.1, 0.3, 0.1}
+    }
+
+    if width {
+    {
+      Position3: {x: -width/2, y: -0.95, z: -width/2}
+      Box: {width, 0.1, width}
+    }}
+  }
+}
+
+@tree Parent
+template Railing {
+  prop color: $Stone
+  const depth: 0.2
+
+  Position3: {y += 1}
+
+  {
+    Position3: {x: 0, y: -0.95, z: -depth/2}
+    Box: {2, 0.05, depth}
+    $Railing
+  } {
+    Position3: {x: 0, y: -1.05, z: -0.05}
+    Box: {2, 0.15, 0.1}
+    $color
+  }
+}
+
+@tree Parent
+template RailingCorner {
+  prop color: $Stone
+  const depth: 0.2
+
+  Position3: {y += 1}
+
+  {
+    Position3: {x: -0.05, y: -1.05, z: -0.05}
+    Box: {0.1, 0.15, 0.1}
+    $color
+  } {
+    Position3: {x: -depth/2, y: -0.95, z: -depth/2}
+    Box: {depth, 0.05, depth}
+    $Railing
+  }
+}
+
+@tree Parent
+template Building {
+  prop width: 3
+  prop depth: 3
+  prop height: 3
+  prop railing_frequency: 2
+  prop blank_ground_floor: false
+  prop roof_width: 0.3
+  prop mixed: false
+  prop color: Stone
+  prop window = SideWindow: {
+    width: 0.6 
+    height: 1.2 
+    offset: 0.6
+    window_color: $Frame
+    awning_color: $Awning
+    awning: true
+    style: true
+  }
+
+  const bw: width * 2
+  const bd: depth * 2
+  const bh: height + 1
+  const sidewalk_height: 0.2
+  const sidewalk_depth: 1
+  const bwindow = SideWindow: {
+    width: $window.width
+    height: $window.height
+    offset: $window.offset
+    color: $color
+    awning: $window.awning
+    style: $window.style
+    ledge: $window.ledge
+    window_color: $window.window_color
+    awning_color: $window.awning_color
+  }
+  
+  sidewalk {
+    Position3: {y: sidewalk_height / 2}
+    Box: {
+      width * 2 + sidewalk_depth * 2, 
+      sidewalk_height, 
+      depth * 2 + sidewalk_depth * 2
+    }
+    $SideWalk
+  }
+
+  const door_index = i32 : width / 2
+  
+  building {
+    Position3: {x += -bw / 2 + 1, y: sidewalk_height, z += -bd / 2}
+  
+    {
+      Position3: {x: bw / 2 - 1, y: bh * 2, z: bd / 2}
+      Rectangle: {bw, bd}
+      Rotation3: {x: math.PI/2}
+      $Roof
+    }
+
+    with RoofCorner(roof_width) {{
+      Position3: {x: - 1, y: bh * 2}
+    } {
+      Position3: {x: bw - 1, y: bh * 2}
+      Rotation3: {y: -math.PI/2}
+    } {
+      Position3: {x: bw - 1, y: bh * 2, z: bd}
+      Rotation3: {y: math.PI}
+    } {
+      Position3: {x: - 1, y: bh * 2, z: bd}
+      Rotation3: {y: math.PI / 2}
+    }}
+
+    for y in 0 .. bh + 1 {
+      const is_roof: y == bh
+      
+      if y && !is_roof {{
+        Position3: {x: bw / 2 - 1, y: y * 2, z: bd / 2}
+        Rectangle: {bw, bd}
+        Rotation3: {x: math.PI/2}
+        $Floor
+      }}
+      {
+        Position3: {x: bw / 2 - 1, y: y * 2, z: bd / 2}
+        Rectangle: {bw, bd}
+        Rotation3: {x: -math.PI/2}
+        $Interior
+      }
+
+      if y && !is_roof && !(y % railing_frequency) {
+        with Railing(color: color) {
+          for x in 0 .. width {
+            {
+              Position3: {x: x * 2, y: y * 2}
+            } {
+              Position3: {x: x * 2, y: y * 2, z: bd}
+              Rotation3: {y: math.PI}
+            }
+          }
+          for x in 0 .. depth {
+            {
+              Position3: {x: - 1, y: y * 2, x * 2 + 1}
+              Rotation3: {y: math.PI/2}
+            } {
+              Position3: {x: bw - 1, y: y * 2, x * 2 + 1}
+              Rotation3: {y: -math.PI/2}
+            }
+          }
+        }
+        
+        with RailingCorner(color: color) {{
+          Position3: {x: - 1, y: y * 2}
+        } {
+          Position3: {x: bw - 1, y: y * 2}
+          Rotation3: {y: -math.PI/2}
+        } {
+          Position3: {x: bw - 1, y: y * 2, z: bd}
+          Rotation3: {y: math.PI}
+        } {
+          Position3: {x: - 1, y: y * 2, z: bd}
+          Rotation3: {y: math.PI / 2}
+        }}
+      }
+
+      {
+        Position3: {y: y * 2}
+        for x in 0 .. width {
+          {
+            Position3: {x * 2}
+            if !y {
+              if (x == door_index) {
+                if mixed {
+                  SideMixed: {color: $color}
+                } else {
+                  SideDoor: {color: $color}
+                }
+              } else if mixed {
+                SideMixed: {color: $color}
+              } else if blank_ground_floor {
+                Side:{color: $color}
+              } else {
+                $bwindow
+              }
+            } else {
+              if !is_roof {
+                $bwindow
+              } else {
+                Roof: {roof_width}
+              }
+            }
+          }
+          {
+            Rotation3: {y: math.PI}
+            Position3: {x: x * 2, z: bd}
+            if !y && blank_ground_floor {
+              Side(color: $color)
+            } else if !is_roof {
+              $bwindow
+            } else {
+              Roof: {roof_width}
+            }
+          }
+        }
+
+        for x in 0 .. depth {
+          {
+            Position3: {x: -1, z: x * 2 + 1}
+            Rotation3: {y: math.PI/2}
+            if !y && blank_ground_floor {
+              Side(color: $color)
+            } else if !is_roof {
+              $bwindow
+            } else {
+              Roof: {roof_width}
+            }
+          }
+          {
+            Position3: {x: bw - 1, z: x * 2 + 1}
+            Rotation3: {y: -math.PI/2}
+            if !y && blank_ground_floor {
+              Side(color: $color)
+            } else if !is_roof {
+              $bwindow
+            } else {
+              Roof: {roof_width}
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@tree Parent
+template BuildingA {
+  prop width: 3
+  prop depth: 3
+  prop height: 3
+  
+  const color = Rgb: {rng.f(0.3) + 0.3, rng.f(0.3) + 0.3, rng.f(0.3) + 0.3}
+  const window_b: rng.f(0.3) + 0.7
+  const window_h: 1 + rng.f(0.4)
+  const window_o: 1 - window_h / 2
+
+  const window = SideWindow: {
+    width: 0.6 + rng.f(0.3)
+    height: window_h
+    offset: window_o
+    window_color: {window_b, window_b, window_b}
+    awning_color: match rng.u(4) {
+      0: $Awning
+      1: {0.12, 0.06, 0.05}
+      2: {0.13, 0.12, 0.08}
+      3: {0.23, 0.13, 0.1}
+    }
+    awning: true
+    style: rng.u(2)
+    ledge: rng.u(2)
+  }
+  
+  Building(
+    width: $
+    height: $
+    depth: $
+    window: window
+    mixed: rng.u(2)
+    railing_frequency: rng.u(3) + 1
+    roof_width: rng.f(0.3) + 0.1
+    color: {rng.f(0.2) + 0.3, rng.f(0.2) + 0.3, rng.f(0.2) + 0.3}
+  )
+}
+
+@tree Parent
+template BuildingB {
+  prop width: 3
+  prop depth: 3
+  prop height: 3
+  
+  const window = SideWindow: {
+    width: 1.2
+    height: 1.5 
+    offset: 0.15
+    window_color: $Frame
+    awning_color: $Awning
+    awning: false
+    ledge: false
+  }
+  
+  Building(
+    width: $
+    height: height + 1
+    depth: $
+    window: window
+    railing_frequency: 1
+    blank_ground_floor: true
+    roof_width: 0
+    color: {rng.f(0.2) + 0.3, rng.f(0.2) + 0.3, rng.f(0.2) + 0.3}
+  )
+}
+
+@tree Parent
+template BuildingC {
+  prop width: 3
+  prop depth: 3
+  prop height: 3
+  
+  const window = SideWindow: {
+    width: 1.0
+    height: 1.4
+    offset: 0.3
+    window_color: $Frame
+    awning_color: $Awning
+    awning: false
+    awning_color: {}
+    ledge: false
+    style: false
+  }
+  
+  const b = rng.f(0.1) + 0.2
+  
+  Building(
+    width: $
+    height: height + 2
+    depth: $
+    window: window
+    railing_frequency: 100
+    mixed: true
+    roof_width: 0
+    color: {b, b, b}
+  )
+}
+
+@tree Parent
+template Lantern {
+  prop on: false
+  const height: 3
+
+  {
+    Position3: {y: height/2}
+    Box: {0.2, height, 0.2}
+    $Lantern
+  }
+
+  const w: 0.75
+  const y: w / math.sqrt(2) 
+  const h: height - 0.1
+
+  {
+    Position3: {x: -0.3, y: h + y / 2}
+    Rotation3: {z: -math.PI/4}
+    Box: {0.75, 0.1, 0.2}
+    $Lantern
+  }
+  {
+    Position3: {x: 0.3, y: h + y / 2}
+    Rotation3: {z: math.PI/4}
+    Box: {0.75, 0.1, 0.2}
+    $Lantern
+  }
+  
+  const emissive = Emissive: match on {
+    true: { 1.0 }
+    false: { 0.0 }
+  }
+
+  with $LanternLight, $emissive {{
+    Position3: {x: -0.4, y: h + y / 2}
+    Rotation3: {z: -math.PI/4}
+    Box: {0.5, 0.05, 0.2}
+  }
+  {
+    Position3: {x: 0.4, y: h + y / 2}
+    Rotation3: {z: math.PI/4}
+    Box: {0.5, 0.05, 0.2}
+  }}
+
+  {
+    PointLight: {
+      color: [1.0, 0.5, 0]
+      intensity: match on {
+        true: 0.01
+        false: 0
+      }
+      distance: 2
+    }
+    Position3: {y: height}
+  }
+}
+
+@tree Parent
+template TrafficLight {
+  prop state: 0
+  
+  Position3: {y += 0, z: 0.15}
+  Box: {0.3, 0.65, 0.1}
+  Rgb: {0.01, 0.01, 0.01}
+  
+  {
+    Position3: {}
+    Box: {0.4, 0.75, 0.05}
+    Rgb: {0.15, 0.1}
+  }
+  
+  {
+    Position3: {y: 0.2, 0.05}
+    Box: {0.15, 0.15, 0.05}
+    Rgb: match state {
+      2: {1, 0, 0}
+      _: {0.1, 0, 0}
+    }
+    Emissive: match state {
+      2: {2}
+      _: {0}
+    }
+  } {
+    Position3: {y: 0.0, 0.05}
+    Box: {0.15, 0.15, 0.05}
+    Rgb: match state {
+      1: {1, 0.5, 0}
+      _: {0.1, 0.05, 0}
+    }
+    Emissive: match state {
+      1: {2}
+      _: {0}
+    }
+  } {
+    Position3: {y: -0.2, 0.05}
+    Box: {0.15, 0.15, 0.05}
+    Rgb: match state {
+      0: {0, 1, 0}
+      _: {0.0, 0.1, 0}
+    }
+    Emissive: match state {
+      0: {2}
+      _: {0}
+    }
+  } {
+    PointLight: {
+      color: match state {
+        0: [0.1, 0.5, 0.1]
+        1: [0.5, 0.25, 0.1]
+        2: [0.5, 0.1, 0.1]
+      }
+      intensity: 0.03
+      distance: 1
+    }
+    Position3: {}
+  }
+}
+
+@tree Parent
+template TrafficLights {
+  prop height: 3
+
+  Position3: {y += height / 2}
+  Box: {0.2, height, 0.2}
+  Rgb: {0.1, 0.1, 0.1}
+  
+  _ {
+    Position3: {-2, y: height / 2}
+    Box: {4.2, 0.1, 0.2}
+    Rgb: {0.1, 0.1, 0.1}
+  }
+
+  {
+    Position3: {-2, height / 2}
+    TrafficLight: {}
+  }
+  {
+    Position3: {-4, height / 2}
+    TrafficLight: {}
+  }
+}
+
+@tree Parent
+template Plant {
+  {
+    Position3: {y: 0.5}
+    Rotation3: {x: math.PI/2}
+    Frame: {width: 0.5, depth: 0.5, height: 0.5, color: $Concrete}
+  }
+  {
+    Position3: {y: 0.45}
+    Rotation3: {math.PI/2}
+    Rectangle: {0.5, 0.5}
+    Rgb: {0.01, 0.005, 0}
+  }
+  {
+    Position3: {y: 0.5}
+    Box: {0.1, 0.4, 0.1}
+    Rgb: {0.1, 0.07, 0.05}
+  }
+  {
+    Position3: {y: 0.7}
+    Box: {0.2, 0.1, 0.2}
+    Rgb: {0.15, 0.25, 0.1}
+  }
+  {
+    Position3: {y: 1.0}
+    Box: {0.3, 0.5, 0.3}
+    Rgb: {0.15, 0.25, 0.1}
+  }
+}
+
+@tree Parent
+template Street {
+  prop width: 12
+  prop length: 15
+  
+  {
+    Position3: {y: 0.025}
+    Box: {width, 0.05, length}
+    $Street
+  }
+  
+  {
+    Position3: {y: 0.05}
+    Box: {1, 0.2, length}
+    $SideWalk
+  }
+
+  Lantern() {
+    Position3: {z: 0}
+  }
+  
+  {
+    Position3: {z: -length / 2 + 1 }
+    TrafficLights: {}
+  }
+  {
+    Position3: {z: length / 2 - 1 }
+    Rotation3: {y: math.PI}
+    TrafficLights: {}
+  }
+  
+  for i in 0..4 {
+    {
+      Position3: {z: i * 5 - 7.5}
+      Plant: {}
+    }
+  }
+}
+
+@tree Parent
+template CityBlock {
+  for x in 0..3 {
+    {
+      Position3: {-8, z: x * 8 - 8}
+      Rotation3: {y: math.PI/2}
+      if rng.u(5) {
+        BuildingA: {height: rng.u(MaxSize)}
+      } else if rng.u(3) {
+        BuildingB: {height: rng.u(MaxSize)}
+      } else {
+        BuildingC: {height: rng.u(MaxSize)}
+      }
+    } {
+      Position3: {8, z: x * 8 - 8}
+      Rotation3: {y: -math.PI/2}
+      if rng.u(5) {
+        BuildingA: {height: rng.u(MaxSize)}
+      } else if rng.u(3) {
+        BuildingB: {height: rng.u(MaxSize)}
+      } else {
+        BuildingC: {height: rng.u(MaxSize)}
+      }
+    }
+  }
+  {
+    Position3: {0, z: -7}
+    if rng.u(5) {
+      BuildingA: {depth: 4, height: rng.u(MaxSize)}
+    } else if rng.u(3) {
+      BuildingB: {depth: 4, height: rng.u(MaxSize)}
+    } else {
+      BuildingC: {depth: 4, height: rng.u(MaxSize)}
+    }
+  }
+  {
+    Position3: {0, z: 6}
+    Rotation3: {y: math.PI}
+    if rng.u(5) {
+      BuildingA: {depth: 5, height: rng.u(MaxSize)}
+    } else if rng.u(3) {
+      BuildingB: {depth: 5, height: rng.u(MaxSize)}
+    } else {
+      BuildingC: {depth: 5, height: rng.u(MaxSize)}
+    }
+  }
+}
+
+@tree Parent
+template StreetGrid {
+  prop width: 1
+  prop height: 1
+  
+  const sw: 12
+  const cellsize: 8 * 3
+  const w: cellsize + sw
+  
+  for x in 0..width + 1{
+    for y in 0..height {
+      Street(sw, cellsize) {
+        Position3: {x * w, z: y * w}
+      }
+    }
+  }
+  
+  for x in 0..width {
+    for y in 0..height + 1 {
+      Street(sw, cellsize) {
+        Position3: {x: x * w + w / 2, z: (y - 1) * w + w / 2}
+        Rotation3: {y: math.PI/2}
+      }
+    }
+  }
+  
+  for x in 0 .. width + 1 {
+    for y in 0 .. height  + 1{
+      {
+        Position3: {
+          x: x * (cellsize + sw), 
+          z: y * (cellsize + sw) - sw * 1.5
+        }
+        Box: {sw, 0.1, sw}
+        $Street
+      }
+    }
+  }
+
+  for x in 0..width {
+    for y in 0..height {
+      {
+        Position3: {
+          x: x * (cellsize + sw) - sw / 2 + cellsize, 
+          z: y * (cellsize + sw) 
+        }
+        CityBlock: {}
+      }
+    }
+  }
+}
+
+StreetGrid(2, 2)
+
+$ {
+  flecs.game.TimeOfDay: {0.7, 0.0}
+}
+
+camera {
+  Position3: {-3.21, 11.75, -27.62}
+  Rotation3: {-0.27, 0.66, 0}
+}

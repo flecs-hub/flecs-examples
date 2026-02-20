@@ -25,7 +25,7 @@ function onClick() {
 
 <style scoped>
 .section-menu-item {
-  color: var(--light-green);
+  color: var(--primary-text);
   text-decoration: none;
   padding: 0.45rem 0.65rem;
   font-size: 0.9rem;
