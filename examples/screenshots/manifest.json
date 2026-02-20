@@ -32,6 +32,16 @@
   {
     "sectionId": "script",
     "sectionTitle": "Script examples",
+    "id": "basics",
+    "title": "Basics",
+    "url": "https://flecs.dev/explorer/?sidebar=false&code_url=https://raw.githubusercontent.com/flecs-hub/flecs-examples/refs/heads/main/examples/scripts/basics.flecs",
+    "captureCanvas": true,
+    "screenshot": "/Users/sandermertens/GitHub/SanderMertens/flecs-projects/flecs-examples/examples/screenshots/basics.png",
+    "ok": true
+  },
+  {
+    "sectionId": "script",
+    "sectionTitle": "Script examples",
     "id": "procedural_city",
     "title": "Procedural City",
     "url": "https://flecs.dev/explorer/?sidebar=false&code_url=https://raw.githubusercontent.com/flecs-hub/flecs-examples/refs/heads/main/examples/scripts/city.flecs",

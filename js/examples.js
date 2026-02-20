@@ -26,6 +26,24 @@
           capture_canvas: true
         },
         {
+          id: "for",
+          title: "For loops",
+          url: "https://flecs.dev/explorer/?sidebar=false&code_url=https://raw.githubusercontent.com/flecs-hub/flecs-examples/refs/heads/main/examples/scripts/for.flecs",
+          capture_canvas: true
+        },
+        {
+          id: "math",
+          title: "Math functions",
+          url: "https://flecs.dev/explorer/?sidebar=false&code_url=https://raw.githubusercontent.com/flecs-hub/flecs-examples/refs/heads/main/examples/scripts/math.flecs",
+          capture_canvas: true
+        },
+        {
+          id: "traffic_light",
+          title: "Traffic light",
+          url: "https://flecs.dev/explorer/?sidebar=false&code_url=https://raw.githubusercontent.com/flecs-hub/flecs-examples/refs/heads/main/examples/scripts/traffic_light.flecs",
+          capture_canvas: true
+        },
+        {
           id: "procedural_city",
           title: "Procedural City",
           url: "https://flecs.dev/explorer/?sidebar=false&code_url=https://raw.githubusercontent.com/flecs-hub/flecs-examples/refs/heads/main/examples/scripts/city.flecs",

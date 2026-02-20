@@ -1,0 +1,52 @@
+using flecs.components.*
+using flecs.game
+
+// Enum type for active traffic light color
+enum TrafficLightColor {
+  Green, Orange, Red
+}
+
+// Traffic light template
+template TrafficLight {
+  prop color = TrafficLightColor: Red
+
+  Box: {3, 7, 1}
+  Rgb: {0.1, 0.1, 0.1}
+  
+  // Give each light the same sized box
+  with Box(1.25, 1.25, 0.1) {
+    red {
+      Position3: {0, 2, -1}
+      Rgb: {1, 0.01, 0.01}
+      Emissive: match color { // Set Emissive component based on active color
+        Red: {4}
+        _: {0}
+      }
+    }
+    orange {
+      Position3: {0, 0, -1}
+      Rgb: {1, 0.3, 0}
+      Emissive: match color {
+        Orange: {3}
+        _: {0}
+      }
+    }
+    green {
+      Position3: {0, -2, -1}
+      Rgb: {0, 1, 0}
+      Emissive: match color {
+        Green: {3}
+        _: {0}
+      }
+    }
+  }
+}
+
+// Instantiate TrafficLight template
+TrafficLight(Green) {
+  Position3: {}
+}
+
+$ {
+  TimeOfDay: {0.9}
+}

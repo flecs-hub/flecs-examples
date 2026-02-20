@@ -1,0 +1,23 @@
+using flecs.components.*
+using flecs.script
+
+const Shapes = 80
+const S = (2 * math.PI) / Shapes
+const R = 10
+
+shape {
+  Position3: {0, 0, 10}
+  Rotation3: {-0.5}
+
+  for i in 0..Shapes {
+    const t = i * S
+    const c = 1 + math.cos(t * 3)
+  
+    {
+      Position3: {R * math.cos(t), 0, R * math.sin(t)}
+      Rotation3: {y: -t, z: t}
+      Box: {3, c + 1, 0.5}
+      Rgb: {0, 0.1 + 0.2 * c, 0.5}
+    }
+  }
+}
