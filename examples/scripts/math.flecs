@@ -14,7 +14,7 @@ shape {
     const c = 1 + math.cos(t * 3)
   
     {
-      Position3: {R * math.cos(t), 0, R * math.sin(t)}
+      Position3: {R * math.cos(t), -1, R * math.sin(t)}
       Rotation3: {y: -t, z: t}
       Box: {3, c + 1, 0.5}
       Rgb: {0, 0.1 + 0.2 * c, 0.5}

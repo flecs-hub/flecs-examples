@@ -38,6 +38,12 @@
           capture_canvas: true
         },
         {
+          id: "fence",
+          title: "Fence",
+          url: "https://flecs.dev/explorer/?sidebar=false&code_url=https://raw.githubusercontent.com/flecs-hub/flecs-examples/refs/heads/main/examples/scripts/fence.flecs",
+          capture_canvas: true
+        },
+        {
           id: "traffic_light",
           title: "Traffic light",
           url: "https://flecs.dev/explorer/?sidebar=false&code_url=https://raw.githubusercontent.com/flecs-hub/flecs-examples/refs/heads/main/examples/scripts/traffic_light.flecs",
