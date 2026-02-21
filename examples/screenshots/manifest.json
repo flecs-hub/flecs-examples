@@ -88,25 +88,5 @@
     "captureCanvas": true,
     "screenshot": "/Users/sandermertens/GitHub/SanderMertens/flecs-projects/flecs-examples/examples/screenshots/procedural_building.png",
     "ok": true
-  },
-  {
-    "sectionId": "script",
-    "sectionTitle": "Script examples",
-    "id": "perlin_1",
-    "title": "Perlin Noise 1",
-    "url": "https://flecs.dev/explorer/?sidebar=false&code_url=https://raw.githubusercontent.com/flecs-hub/flecs-examples/refs/heads/main/examples/scripts/perlin_1.flecs",
-    "captureCanvas": true,
-    "screenshot": "/Users/sandermertens/GitHub/SanderMertens/flecs-projects/flecs-examples/examples/screenshots/perlin_1.png",
-    "ok": true
-  },
-  {
-    "sectionId": "script",
-    "sectionTitle": "Script examples",
-    "id": "perlin_2",
-    "title": "Perlin Noise 2",
-    "url": "https://flecs.dev/explorer/?sidebar=false&code_url=https://raw.githubusercontent.com/flecs-hub/flecs-examples/refs/heads/main/examples/scripts/perlin_2.flecs",
-    "captureCanvas": true,
-    "screenshot": "/Users/sandermertens/GitHub/SanderMertens/flecs-projects/flecs-examples/examples/screenshots/perlin_2.png",
-    "ok": true
   }
 ]

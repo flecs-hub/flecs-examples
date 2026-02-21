@@ -6,7 +6,7 @@ const S = (2 * math.PI) / Shapes
 const R = 10
 
 shape {
-  Position3: {0, 0, 10}
+  Position3: {0, 0, 15}
   Rotation3: {-0.5}
 
   for i in 0..Shapes {

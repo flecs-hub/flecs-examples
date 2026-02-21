@@ -78,7 +78,7 @@ template TrafficLight {
 
 // Instantiate TrafficLight
 TrafficLight(Green) {
-  Position3: {y: 1, z: -3}
+  Position3: {y: 1, z: -2}
   Rotation3: {y: 0.4}
 }
 
