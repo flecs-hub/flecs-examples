@@ -174,6 +174,10 @@ onBeforeUnmount(() => {
   box-sizing: border-box;
 }
 
+html, body {
+  overscroll-behavior: none;
+}
+
 body {
   margin: 0;
   font-family: Inter, Helvetica, Arial, sans-serif;
