@@ -163,9 +163,9 @@ onBeforeUnmount(() => {
   --primary-text: hsl(195, 15%, 85%);
   --secondary-text: hsl(198, 9%, 56%);
 
-  --card-width: 320px;
-  --card-height: 180px;
-  --card-total-width: 344px;
+  --card-width: 300px;
+  --card-height: 200px;
+  --card-total-width: 324px;
   --grid-gap: 16px;
   --section-content-indent: calc(9px + 0.55rem);
 }

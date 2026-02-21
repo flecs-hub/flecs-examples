@@ -42,6 +42,36 @@
   {
     "sectionId": "script",
     "sectionTitle": "Script examples",
+    "id": "for",
+    "title": "For loops",
+    "url": "https://flecs.dev/explorer/?sidebar=false&code_url=https://raw.githubusercontent.com/flecs-hub/flecs-examples/refs/heads/main/examples/scripts/for.flecs",
+    "captureCanvas": true,
+    "screenshot": "/Users/sandermertens/GitHub/SanderMertens/flecs-projects/flecs-examples/examples/screenshots/for.png",
+    "ok": true
+  },
+  {
+    "sectionId": "script",
+    "sectionTitle": "Script examples",
+    "id": "math",
+    "title": "Math functions",
+    "url": "https://flecs.dev/explorer/?sidebar=false&code_url=https://raw.githubusercontent.com/flecs-hub/flecs-examples/refs/heads/main/examples/scripts/math.flecs",
+    "captureCanvas": true,
+    "screenshot": "/Users/sandermertens/GitHub/SanderMertens/flecs-projects/flecs-examples/examples/screenshots/math.png",
+    "ok": true
+  },
+  {
+    "sectionId": "script",
+    "sectionTitle": "Script examples",
+    "id": "traffic_light",
+    "title": "Traffic light",
+    "url": "https://flecs.dev/explorer/?sidebar=false&code_url=https://raw.githubusercontent.com/flecs-hub/flecs-examples/refs/heads/main/examples/scripts/traffic_light.flecs",
+    "captureCanvas": true,
+    "screenshot": "/Users/sandermertens/GitHub/SanderMertens/flecs-projects/flecs-examples/examples/screenshots/traffic_light.png",
+    "ok": true
+  },
+  {
+    "sectionId": "script",
+    "sectionTitle": "Script examples",
     "id": "procedural_city",
     "title": "Procedural City",
     "url": "https://flecs.dev/explorer/?sidebar=false&code_url=https://raw.githubusercontent.com/flecs-hub/flecs-examples/refs/heads/main/examples/scripts/city.flecs",

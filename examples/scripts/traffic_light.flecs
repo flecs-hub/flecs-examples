@@ -1,50 +1,85 @@
 using flecs.components.*
 using flecs.game
 
-// Enum type for active traffic light color
 enum TrafficLightColor {
   Green, Orange, Red
+}
+
+// Light template
+template Light {
+  prop color = Rgb: {0, 0, 0}
+  prop toggle: false
+  
+  const h = 1.25
+  const d = 0.7
+  const w = 0.15
+  
+  // Light rectangle
+  $color
+  Box: {1.25, h, 0.1}
+  Emissive: match toggle {
+    true: {300}
+    false: {0}
+  }
+  
+  // Light source
+  PointLight: {
+    color: [color.r, color.g, color.b]
+    intensity: match toggle {
+      true: 300
+      false: 0
+    }
+    distance: 0.25
+  }
+  
+  // Light enclosing
+  with Rgb(0.05, 0.05, 0.05) {
+    {
+      Box: {1.25 + 2 * w, w, d}
+      Position3: {y: w/2 + h / 2, -(d/2)}
+    } {
+      Box: {w, 1.25, d}
+      Position3: {x: w/2 + h / 2, y: 0, -(d/2)}
+    } {
+      Box: {w, 1.25, d}
+      Position3: {x: -(w/2) - h / 2, y: 0, -(d/2)}
+    }
+  }
 }
 
 // Traffic light template
 template TrafficLight {
   prop color = TrafficLightColor: Red
 
+  // Backplate
   Box: {3, 7, 1}
-  Rgb: {0.1, 0.1, 0.1}
+  Rgb: {0.07, 0.07, 0.06}
   
-  // Give each light the same sized box
-  with Box(1.25, 1.25, 0.1) {
-    red {
-      Position3: {0, 2, -1}
-      Rgb: {1, 0.01, 0.01}
-      Emissive: match color { // Set Emissive component based on active color
-        Red: {4}
-        _: {0}
-      }
-    }
-    orange {
-      Position3: {0, 0, -1}
-      Rgb: {1, 0.3, 0}
-      Emissive: match color {
-        Orange: {3}
-        _: {0}
-      }
-    }
-    green {
-      Position3: {0, -2, -1}
-      Rgb: {0, 1, 0}
-      Emissive: match color {
-        Green: {3}
-        _: {0}
-      }
-    }
+  // Yellow outline
+  {
+    Position3: {}
+    Box: {3.5, 7.5, 0.5}
+    Rgb: {0.5, 0.3, 0}
+  }
+
+  // The lights
+  Light red({r: 0.01}, color == Red) {
+    Position3: {0, 2, -0.5}
+  }
+  
+  Light orange({r: 0.005, g: 0.001}, color == Orange) {
+    Position3: {0, 0, -0.5}
+  }
+  
+  Light green({g: 0.004}, color == Green) {
+    Position3: {0, -2, -0.5}
   }
 }
 
-// Instantiate TrafficLight template
+// Instantiate TrafficLight
 TrafficLight(Green) {
-  Position3: {}
+  Position3: {y: 1, z: -3}
+  Rotation3: {y: 0.4}
 }
 
 $ {

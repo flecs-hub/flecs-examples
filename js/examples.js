@@ -55,18 +55,18 @@
           url: "https://flecs.dev/explorer/?sidebar=false&code_url=https://raw.githubusercontent.com/flecs-hub/flecs-examples/refs/heads/main/examples/scripts/buildings.flecs",
           capture_canvas: true
         },
-        {
-          id: "perlin_1",
-          title: "Perlin Noise 1",
-          url: "https://flecs.dev/explorer/?sidebar=false&code_url=https://raw.githubusercontent.com/flecs-hub/flecs-examples/refs/heads/main/examples/scripts/perlin_1.flecs",
-          capture_canvas: true
-        },
-        {
-          id: "perlin_2",
-          title: "Perlin Noise 2",
-          url: "https://flecs.dev/explorer/?sidebar=false&code_url=https://raw.githubusercontent.com/flecs-hub/flecs-examples/refs/heads/main/examples/scripts/perlin_2.flecs",
-          capture_canvas: true
-        },
+        // {
+        //   id: "perlin_1",
+        //   title: "Perlin Noise 1",
+        //   url: "https://flecs.dev/explorer/?sidebar=false&code_url=https://raw.githubusercontent.com/flecs-hub/flecs-examples/refs/heads/main/examples/scripts/perlin_1.flecs",
+        //   capture_canvas: true
+        // },
+        // {
+        //   id: "perlin_2",
+        //   title: "Perlin Noise 2",
+        //   url: "https://flecs.dev/explorer/?sidebar=false&code_url=https://raw.githubusercontent.com/flecs-hub/flecs-examples/refs/heads/main/examples/scripts/perlin_2.flecs",
+        //   capture_canvas: true
+        // },
       ]
     }
   ];
