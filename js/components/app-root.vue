@@ -18,7 +18,6 @@
         v-for="section in sections"
         :key="section.id"
         :section="section"
-        :rows="rows"
         :explorer-url="explorerUrl"
         :screenshot-dir="screenshotDir"
         @toggle="toggleSection"
@@ -32,7 +31,7 @@
 </template>
 
 <script setup>
-import { onBeforeUnmount, onMounted, reactive, ref } from "vue";
+import { reactive, ref } from "vue";
 import ExampleSection from "./example-section.vue";
 import SectionMenu from "./section-menu.vue";
 
@@ -53,9 +52,6 @@ const sections = ref(
     collapsed: !!collapsedState[section.id],
   }))
 );
-
-const rows = ref(rowsForHeight(window.innerHeight));
-let resizeRaf = null;
 
 function loadCollapsedState() {
   try {
@@ -106,38 +102,6 @@ function onSectionLinkClick(sectionId) {
   section.collapsed = false;
   persistSectionState(section);
 }
-
-function rowsForHeight(height) {
-  if (height < 760) {
-    return 1;
-  }
-  if (height < 1024) {
-    return 2;
-  }
-  return 3;
-}
-
-function onResize() {
-  if (resizeRaf !== null) {
-    window.cancelAnimationFrame(resizeRaf);
-  }
-
-  resizeRaf = window.requestAnimationFrame(() => {
-    rows.value = rowsForHeight(window.innerHeight);
-    resizeRaf = null;
-  });
-}
-
-onMounted(() => {
-  window.addEventListener("resize", onResize);
-});
-
-onBeforeUnmount(() => {
-  window.removeEventListener("resize", onResize);
-  if (resizeRaf !== null) {
-    window.cancelAnimationFrame(resizeRaf);
-  }
-});
 </script>
 
 <style>

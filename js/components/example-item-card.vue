@@ -66,7 +66,8 @@ defineProps({
 .example-card {
   position: relative;
   display: block;
-  width: var(--card-total-width);
+  width: 100%;
+  max-width: var(--card-total-width);
   margin: 0;
   padding: 0 0 0.75rem;
   overflow: hidden;

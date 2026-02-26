@@ -20,12 +20,12 @@
       </div>
     </div>
 
-    <div class="example-grid" :id="gridId" ref="gridRef">
+    <div class="example-grid" :id="gridId">
       <example-item-card
-        v-for="(item, index) in section.items"
+        v-for="item in section.items"
         :key="item.id"
         :item="item"
-        :hidden="isCardHidden(index)"
+        :hidden="section.collapsed"
         :explorer-url="explorerUrl"
         :screenshot-dir="screenshotDir"
       />
@@ -34,16 +34,12 @@
 </template>
 
 <script setup>
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { computed } from "vue";
 import ExampleItemCard from "./example-item-card.vue";
 
 const props = defineProps({
   section: {
     type: Object,
-    required: true,
-  },
-  rows: {
-    type: Number,
     required: true,
   },
   explorerUrl: {
@@ -58,84 +54,8 @@ const props = defineProps({
 
 const emit = defineEmits(["toggle"]);
 
-const gridRef = ref(null);
-const visibleCount = ref(props.section.items.length);
-let resizeObserver = null;
-
 const sectionDomId = computed(() => `section-${props.section.id}`);
 const gridId = computed(() => `grid-${props.section.id}`);
-
-function numberFromVar(varName, fallback) {
-  const value = window
-    .getComputedStyle(document.documentElement)
-    .getPropertyValue(varName)
-    .trim()
-    .replace("px", "");
-
-  const parsed = Number(value);
-  return Number.isFinite(parsed) ? parsed : fallback;
-}
-
-function updateVisibleCount() {
-  if (props.section.collapsed) {
-    visibleCount.value = 0;
-    return;
-  }
-
-  const grid = gridRef.value;
-  const totalCards = props.section.items.length;
-
-  if (!grid || totalCards === 0) {
-    visibleCount.value = totalCards;
-    return;
-  }
-
-  const cardWidth = numberFromVar("--card-total-width", 344);
-  const gridGap = numberFromVar("--grid-gap", 16);
-
-  const perRow = Math.max(
-    1,
-    Math.floor((grid.clientWidth + gridGap) / (cardWidth + gridGap))
-  );
-
-  visibleCount.value = Math.min(totalCards, perRow * props.rows);
-}
-
-function isCardHidden(index) {
-  if (props.section.collapsed) {
-    return true;
-  }
-
-  return index >= visibleCount.value;
-}
-
-onMounted(() => {
-  nextTick(updateVisibleCount);
-
-  if (window.ResizeObserver) {
-    resizeObserver = new window.ResizeObserver(() => {
-      updateVisibleCount();
-    });
-
-    if (gridRef.value) {
-      resizeObserver.observe(gridRef.value);
-    }
-  }
-});
-
-onBeforeUnmount(() => {
-  if (resizeObserver) {
-    resizeObserver.disconnect();
-    resizeObserver = null;
-  }
-});
-
-watch(
-  () => [props.rows, props.section.collapsed, props.section.items.length],
-  () => {
-    nextTick(updateVisibleCount);
-  }
-);
 </script>
 
 <style scoped>
@@ -205,6 +125,11 @@ watch(
     flex-direction: column;
     align-items: flex-start;
     gap: 0.25rem;
+  }
+
+  .example-grid {
+    grid-template-columns: 1fr;
+    padding-left: 0;
   }
 }
 </style>
